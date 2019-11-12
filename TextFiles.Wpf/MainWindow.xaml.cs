@@ -16,9 +16,6 @@ namespace TextFiles.Wpf
     public partial class MainWindow : Window
     {
 
-        const int INDEX_FOLDER = 0;
-        const int INDEX_FILENAME = 1;
-
         const string bestandenMap = @"../../Assets/";
         readonly ReadService readService = new ReadService();
         readonly WriteService writeService = new WriteService();
@@ -31,6 +28,8 @@ namespace TextFiles.Wpf
         List<string> karakterSetNamen = new List<string> { "Default", "UTF-8", "ANSI" };
         Encoding huidigeKarakterset;
 
+        const int INDEX_FOLDER = 0;
+        const int INDEX_FILENAME = 1;
         string[] huidigBestand = new string[2];
 
         public MainWindow()
@@ -76,7 +75,7 @@ namespace TextFiles.Wpf
                 string bestandsNaam = txtBestandsnaam.Text;
                 txtTekst.Text = "";
 
-                txtTekst.Text = readService.TextFileToString(bestandenMap, bestandsNaam);
+                txtTekst.Text = readService.TextFileToString(bestandenMap, bestandsNaam, huidigeKarakterset);
                 ToonMelding($"Bestand {bestandsNaam} werd succesvol gelezen", true);
             }
             catch (Exception ex)
@@ -106,7 +105,7 @@ namespace TextFiles.Wpf
             {
                 string tekst = txtTekst.Text;
 
-                writeService.StringToTextFile(tekst, huidigBestand[INDEX_FOLDER], huidigBestand[INDEX_FILENAME]);
+                writeService.StringToTextFile(tekst, huidigBestand[INDEX_FOLDER], huidigBestand[INDEX_FILENAME], huidigeKarakterset, true);
                 ToonMelding($"Bestand werd succesvol overschreven in de map: {huidigBestand[INDEX_FOLDER]}", true);
             }
             catch (Exception ex)

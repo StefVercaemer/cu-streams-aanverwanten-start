@@ -15,16 +15,45 @@ namespace TextFiles.Lib
         /// <param name="bestandsMap">Plaats van het weg te schrijven bestand</param>
         /// <param name="bestandsNaam">Naam van het weg te schrijven bestand</param>
         /// <returns>boolean die aanduidt of het gelukt is om het bestand op te slaan</returns>
-        public bool StringToTextFile(string tekst, string bestandsMap, string bestandsNaam)
+        public bool StringToTextFile(string tekst, string bestandsMap, string bestandsNaam, 
+            Encoding encoding = null, bool overschrijfBestaandBestand = false)
         {
             bool isSuccesvolWeggeschreven;
             string bestandsPad;
             bestandsPad = bestandsMap + "\\" + bestandsNaam;
 
+            if (encoding == null)
+            {
+                encoding = Encoding.Default;
+            }
+
+            if (string.IsNullOrEmpty(bestandsPad.Trim()))
+            {
+                throw new Exception("Er is geen bestand gekozen");
+            }
+
+            if (!Directory.Exists(bestandsMap))
+            {
+                try
+                {
+                    Directory.CreateDirectory(bestandsMap);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("De map is niet gevonden");
+                }
+            }
+
+            if (File.Exists(bestandsPad) && !overschrijfBestaandBestand)
+            {
+                throw new Exception("Het bestand bestaat reeds");
+            }
+
             try
             {
                 // Er wordt een instance aangemaakt van de StreamWriter-class
-                using (StreamWriter sw = new StreamWriter(bestandsPad))
+                using (StreamWriter sw = new StreamWriter(
+                    new FileStream(bestandsPad, FileMode.Create, FileAccess.ReadWrite), encoding))
                 {
                     sw.Write(tekst);
                     sw.Close();
