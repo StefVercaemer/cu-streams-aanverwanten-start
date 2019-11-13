@@ -55,5 +55,35 @@ namespace TextFiles.Lib
             return bestandsInhoud;
         }
 
+        public string[] KiesBestand(string filter = "Text documents (.txt)|*.txt|Comma seperated values (.csv)|*.csv")
+        {
+            string[] gekozenBestandsInfo = new string[2];
+            string gekozenBestandsPad;
+            int lastBackslashIndex;
+            OpenFileDialog kiesBestand = new OpenFileDialog();
+            //Enkel de bestanden met de doorgegeven extensie(s) worden getoond
+            kiesBestand.Filter = filter;
+
+            // Toon het dialoogvenster
+            bool? result = kiesBestand.ShowDialog();
+            //bool? betekent dat de boolean naast true en false ook de waarde null kan bevatten
+
+            gekozenBestandsPad = kiesBestand.FileName;
+
+
+            if (string.IsNullOrEmpty(gekozenBestandsPad.Trim()))
+            {
+                gekozenBestandsInfo = null;
+                throw new Exception("Er is geen bestand gekozen");
+            }
+            else
+            {
+                lastBackslashIndex = gekozenBestandsPad.LastIndexOf('\\');
+                gekozenBestandsInfo[0] = gekozenBestandsPad.Substring(0, lastBackslashIndex);
+                gekozenBestandsInfo[1] = gekozenBestandsPad.Substring(lastBackslashIndex + 1);
+            }
+
+            return gekozenBestandsInfo;
+        }
     }
 }
